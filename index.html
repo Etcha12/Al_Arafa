@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pusat Sumber Belajar - PSB AL-ARAFA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Colors & Base Styles */
+        :root {
+            --primary-blue: #1e3a8a; /* Biru Donker */
+            --secondary-blue: #172554; /* Biru lebih gelap */
+            --accent-blue: #3b82f6; /* Biru terang untuk highlight */
+            --text-light: #e2e8f0; /* Teks terang */
+            --bg-dark: #0f172a; /* Latar belakang gelap */
+            --card-bg: #1a202c; /* Latar belakang kartu */
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif; /* Menggunakan font modern */
+            transition: all 0.3s ease;
+        }
+
+        /* Hero Section Styling */
+        .hero-image {
+            background-image: url('https://i.imgur.com/6AVVF64.png'); /* Your custom hero image */
+            background-size: cover;
+            background-position: center;
+            height: 70vh; /* Tinggi hero section */
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            /* Removed mt-16 here */
+        }
+        .hero-overlay {
+            background-color: rgba(0, 0, 0, 0.6); /* Overlay gelap */
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        /* Card Hover Effect */
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(30, 58, 138, 0.4); /* Shadow dengan warna biru */
+        }
+
+        /* Modal Styling */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 100; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+            backdrop-filter: blur(8px); /* Blur effect */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: var(--card-bg);
+            margin: auto;
+            padding: 40px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .close-button {
+            color: var(--text-light);
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: var(--accent-blue);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Responsive Navigation */
+        @media (max-width: 768px) {
+            .md\\:hidden {
+                display: block !important;
+            }
+            .md\\:flex {
+                display: none !important;
+            }
+            .mobile-menu {
+                display: flex;
+                flex-direction: column;
+                background-color: var(--secondary-blue);
+                padding: 1rem;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            }
+            .mobile-menu a {
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+            .mobile-menu a:last-child {
+                border-bottom: none;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans">
+    <!-- Navigation Bar -->
+    <nav class="bg-blue-900/80 backdrop-blur-sm fixed w-full z-20 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <img src="https://i.imgur.com/b9T4fsG.png" alt="Logo PSB" class="h-8 w-8 mr-2">
+                        <span class="text-white font-extrabold text-xl tracking-wide">AL-ARAFA</span>
+                    </div>
+                    <div class="hidden md:ml-6 md:flex md:space-x-8">
+                        <a href="#home" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-800">Beranda</a>
+                        <a href="#tentang" class="text-blue-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-800">Tentang Kami</a>
+                        <a href="#fasilitas" class="text-blue-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-800">Fasilitas</a>
+                        <a href="#layanan" class="text-blue-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-800">Layanan</a>
+                        <a href="#program" class="text-blue-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-800">Program</a>
+                        <a href="#kontak" class="text-blue-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-800">Kontak</a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <button id="loginButton" class="bg-accent-blue hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full text-sm transition duration-300 ease-in-out">
+                        Login
+                    </button>
+                    <div class="-mr-2 flex md:hidden">
+                        <button type="button" id="mobileMenuButton" class="inline-flex items-center justify-center p-2 rounded-md text-blue-200 hover:text-white hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
+                            <span class="sr-only">Open main menu</span>
+                            <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                            <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu, show/hide based on menu state. -->
+        <div class="md:hidden hidden mobile-menu" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" class="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-800">Beranda</a>
+                <a href="#tentang" class="text-blue-200 hover:text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-800">Tentang Kami</a>
+                <a href="#fasilitas" class="text-blue-200 hover:text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-800">Fasilitas</a>
+                <a href="#layanan" class="text-blue-200 hover:text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-800">Layanan</a>
+                <a href="#program" class="text-blue-200 hover:text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-800">Program</a>
+                <a href="#kontak" class="text-blue-200 hover:text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-800">Kontak</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-image">
+        <div class="hero-overlay"></div>
+        <div class="relative z-10 max-w-4xl mx-auto px-4">
+            <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-4 drop-shadow-lg">
+                Pusat Sumber Belajar <span class="text-accent-blue">AL-ARAFA</span>
+            </h1>
+            <p class="text-xl md:text-2xl font-light mb-8">
+                Mewujudkan Ekosistem Pembelajaran Inovatif dan Kolaboratif di Lingkungan Universitas.
+            </p>
+            <a href="#tentang" class="bg-accent-blue hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 ease-in-out shadow-lg">
+                Jelajahi Lebih Lanjut
+            </a>
+        </div>
+    </section>
+
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+
+        =======
+
+        <!-- Fasilitas Section -->
+        <section id="fasilitas" class="mb-20">
+            <h2 class="text-4xl font-bold text-center mb-12 text-accent-blue">Fasilitas Kami</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Contoh Fasilitas -->
+                <div class="bg-card-bg p-6 rounded-lg shadow-md card-hover">
+                    <img src="https://i.imgur.com/0iySbYx.png" alt="Studio Produksi Video" class="rounded-md mb-4">
+                    <h3 class="text-xl font-bold mb-2">Studio Produksi Video</h3>
+                    <p class="text-base">Fasilitas lengkap untuk produksi video pembelajaran, dokumentasi, dan materi multimedia interaktif.</p>
+                </div>
+                <div class="bg-card-bg p-6 rounded-lg shadow-md card-hover">
+                    <img src="https://i.imgur.com/HLxru6m.png" alt="Perpustakaan" class="rounded-md mb-4">
+                    <h3 class="text-xl font-bold mb-2">Perpustakaan Modern</h3>
+                    <p class="text-base">Koleksi buku, jurnal, dan sumber belajar digital yang terorganisir dan mudah diakses.</p>
+                </div>
+                <div class="bg-card-bg p-6 rounded-lg shadow-md card-hover">
+                    <img src="https://i.imgur.com/u7rOEhY.png" alt="Smart Classroom" class="rounded-md mb-4">
+                    <h3 class="text-xl font-bold mb-2">Smart Classroom</h3>
+                    <p class="text-base">Ruang kelas interaktif dengan teknologi canggih untuk mendukung metode pembelajaran modern.</p>
+                </div>
+                <div class="bg-card-bg p-6 rounded-lg shadow-md card-hover">
+                    <img src="https://i.imgur.com/jo49JCo.png" alt="Laboratorium Sains" class="rounded-md mb-4">
+                    <h3 class="text-xl font-bold mb-2">Laboratorium Sains</h3>
+                    <p class="text-base">Mendukung kegiatan praktikum dan eksperimen ilmiah dengan peralatan lengkap.</p>
+                </div>
+                <div class="bg-card-bg p-6 rounded-lg shadow-md card-hover">
+                    <img src="https://i.imgur.com/xcBHzd1.png" alt="Ruang Diskusi" class="rounded-md mb-4">
+                    <h3 class="text-xl font-bold mb-2">Ruang Diskusi Kolaboratif</h3>
+                    <p class="text-base">Area nyaman untuk diskusi kelompok, brainstorming, dan kerja tim.</p>
+                </div>
+                <div class="bg-card-bg p-6 rounded-lg shadow-md card-hover">
+                    <img src="https://i.imgur.com/t78fmAs.png" alt="Galeri" class="rounded-md mb-4">
+                    <h3 class="text-xl font-bold mb-2">Galeri Karya</h3>
+                    <p class="text-base">Menampilkan hasil karya mahasiswa, pameran edukatif, dan media visual inspiratif.</p>
+                </div>
+                <div class="bg-card-bg p-6 rounded-lg shadow-md card-hover">
+                    <img src="https://i.imgur.com/t78fmAs.png" alt="Studio Audio" class="rounded-md mb-4">
+                    <h3 class="text-xl font-bold mb-2">Studio Audio</h3>
+                    <p class="text-base">Fasilitas untuk rekaman podcast, narasi, musik latar, dan bahan audio pembelajaran lainnya.</p>
+                </div>
+                <div class="bg-card-bg p-6 rounded-lg shadow-md card-hover">
+                    <img src="https://i.imgur.com/MqPZK3v.png" alt="Laboratorium Komputer" class="rounded-md mb-4">
+                    <h3 class="text-xl font-bold mb-2">Laboratorium Komputer</h3>
+                    <p class="text-base">Dilengkapi perangkat lunak editing dan desain untuk pengolahan media digital dan produksi konten multimedia.</p>
+                </div>
+                <div class="bg-card-bg p-6 rounded-lg shadow-md card-hover">
+                    <img src="https://i.imgur.com/ZDi8Vug.png" alt="Ruang Simulasi VR & AR" class="rounded-md mb-4">
+                    <h3 class="text-xl font-bold mb-2">Ruang Simulasi VR & AR</h3>
+                    <p class="text-base">Pengalaman pembelajaran imersif dengan teknologi Virtual Reality dan Augmented Reality.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Layanan Section (Fungsi PSB) -->
+        <section id="layanan" class="mb-20">
+            <h2 class="text-4xl font-bold text-center mb-12 text-accent-blue">Layanan Utama Kami</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Fungsi Pengembangan Sistem Instruksional -->
+                <div class="bg-card-bg p-8 rounded-lg shadow-md card-hover">
+                    <h3 class="text-2xl font-bold mb-4 text-accent-blue">1. Pengembangan Sistem Instruksional (PSI)</h3>
+                    <p class="text-lg mb-4">
+                        Fungsi ini berfokus pada peningkatan kualitas proses pembelajaran melalui pengembangan sistem pembelajaran yang efektif dan efisien.
+                    </p>
+                    <ul class="list-disc list-inside text-base space-y-2">
+                        <li>Pengembangan Kurikulum & Sistem Instruksional</li>
+                        <li>Pengembangan Media Pembelajaran</li>
+                        <li>Pengembangan Instrumen Evaluasi</li>
+                        <li>Konsultasi & Pelatihan terkait PSI</li>
+                    </ul>
+                </div>
+
+                <!-- Fungsi Produksi -->
+                <div class="bg-card-bg p-8 rounded-lg shadow-md card-hover">
+                    <h3 class="text-2xl font-bold mb-4 text-accent-blue">2. Produksi Media Pembelajaran</h3>
+                    <p class="text-lg mb-4">
+                        Kegiatan pembuatan, pengembangan, dan pengolahan berbagai media pembelajaran dalam bentuk audio, video, visual, dan multimedia lainnya.
+                    </p>
+                    <ul class="list-disc list-inside text-base space-y-2">
+                        <li>Produksi Media Video (Pembelajaran, Dokumentasi)</li>
+                        <li>Produksi Audio (Podcast, Narasi)</li>
+                        <li>Pengelolaan Media Sederhana (Poster, Brosur)</li>
+                        <li>Produksi Fotografi & Musik</li>
+                    </ul>
+                </div>
+
+                <!-- Fungsi Layanan Media -->
+                <div class="bg-card-bg p-8 rounded-lg shadow-md card-hover">
+                    <h3 class="text-2xl font-bold mb-4 text-accent-blue">3. Layanan Media & Fasilitas</h3>
+                    <p class="text-lg mb-4">
+                        Menyediakan dan mengelola fasilitas serta layanan pendukung pembelajaran yang memfasilitasi akses, pemanfaatan, dan interaksi pengguna.
+                    </p>
+                    <ul class="list-disc list-inside text-base space-y-2">
+                        <li>Pengelolaan Perpustakaan & Akses Sumber Belajar</li>
+                        <li>Penyediaan Fasilitas Audiovisual (Auditorium, Teater Mini)</li>
+                        <li>Ruang Baca & Ruang Diskusi</li>
+                        <li>Laboratorium Sains & Galeri</li>
+                    </ul>
+                </div>
+
+                <!-- Fungsi Administrasi -->
+                <div class="bg-card-bg p-8 rounded-lg shadow-md card-hover">
+                    <h3 class="text-2xl font-bold mb-4 text-accent-blue">4. Administrasi & Operasional</h3>
+                    <p class="text-lg mb-4">
+                        Mendukung kelancaran, keteraturan, dan efektivitas operasional pusat sumber belajar secara keseluruhan.
+                    </p>
+                    <ul class="list-disc list-inside text-base space-y-2">
+                        <li>Pengelolaan Informasi & Komunikasi (Pusat Informasi)</li>
+                        <li>Pengelolaan Operasional & Keamanan (Pusat Kontrol)</li>
+                        <li>Pengelolaan Arsip & Dokumentasi</li>
+                        <li>Pelayanan Pengguna & Koordinasi Internal</li>
+                    </ul>
+                </div>
+
+                <!-- Fungsi Pelatihan -->
+                <div class="bg-card-bg p-8 rounded-lg shadow-md card-hover">
+                    <h3 class="text-2xl font-bold mb-4 text-accent-blue">5. Pelatihan & Pengembangan Kompetensi</h3>
+                    <p class="text-lg mb-4">
+                        Meningkatkan kompetensi dan keterampilan civitas akademika dalam memanfaatkan teknologi, sumber belajar, dan metode pembelajaran modern.
+                    </p>
+                    <ul class="list-disc list-inside text-base space-y-2">
+                        <li>Pengembangan Kompetensi Teknologi Pembelajaran (VR/AR, Smart Classroom)</li>
+                        <li>Pelatihan Bahasa & Metode Pembelajaran Inovatif</li>
+                        <li>Workshop & Pendampingan</li>
+                        <li>Evaluasi & Feedback Pelatihan</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fitur Peminjaman Buku -->
+        <section id="peminjaman-buku" class="mb-20">
+            <h2 class="text-4xl font-bold text-center mb-12 text-accent-blue">Katalog Buku & Peminjaman</h2>
+            <div class="bg-card-bg p-8 rounded-lg shadow-md">
+                <p class="text-lg mb-6">Jelajahi koleksi buku kami dan pinjam dengan mudah untuk mendukung pembelajaran Anda.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="book-list">
+                    <!-- Books will be loaded here by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Fitur Peminjaman Ruangan -->
+        <section id="peminjaman-ruangan" class="mb-20">
+            <h2 class="text-4xl font-bold text-center mb-12 text-accent-blue">Peminjaman Ruangan PSB</h2>
+            <div class="bg-card-bg p-8 rounded-lg shadow-md">
+                <p class="text-lg mb-6">Pesan ruangan untuk diskusi kelompok, presentasi, atau kegiatan akademik lainnya.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="room-list">
+                    <!-- Rooms will be loaded here by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Program Section -->
+        <section id="program" class="mb-20">
+            <h2 class="text-4xl font-bold text-center mb-12 text-accent-blue">Program Unggulan Kami</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Bootcamp Guru Masa Kini -->
+                <div class="bg-card-bg p-6 rounded-lg shadow-md card-hover">
+                    <h3 class="text-xl font-bold mb-2">Bootcamp Guru Masa Kini</h3>
+                    <p class="text-base mb-3">Pelatihan intensif untuk membekali dosen dan mahasiswa dengan keterampilan menyusun RPS, membuat media digital, dan simulasi pembelajaran menggunakan SMART Classroom serta teknologi VR & AR.</p>
+                    <ul class="list-disc list-inside text-sm text-gray-400">
+                        <li>Sesi "Klinik RPS"</li>
+                        <li>"Demo Media Digital"</li>
+                        <li>"Uji Coba Evaluasi"</li>
+                        <li>Simulasi Mengajar di SMART Classroom & VR/AR</li>
+                    </ul>
+                    <button class="mt-4 w-full bg-accent-blue hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md register-training-btn" data-training="Bootcamp Guru Masa Kini">Daftar Pelatihan</button>
+                </div>
+
+                <!-- Lomba Karya Cipta LRC -->
+                <div class="bg-card-bg p-6 rounded-lg shadow-md card-hover">
+                    <h3 class="text-xl font-bold mb-2">Lomba Karya Cipta LRC</h3>
+                    <p class="text-base mb-3">Kompetisi tahunan antar pengguna LRC untuk menciptakan produk pembelajaran (video, podcast, modul digital, animasi) memanfaatkan fasilitas produksi LRC.</p>
+                    <ul class="list-disc list-inside text-sm text-gray-400">
+                        <li>"Workshop Pra-Lomba"</li>
+                        <li>Kategori "Karya Terfavorit" & "Karya Inovatif"</li>
+                        <li>Mendorong kolaborasi lintas jurusan</li>
+                    </ul>
+                    <button class="mt-4 w-full bg-accent-blue hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md register-training-btn" data-training="Lomba Karya Cipta LRC">Daftar Pelatihan</button>
+                </div>
+
+                <!-- Pekan Karya & Inspirasi -->
+                <div class="bg-card-bg p-6 rounded-lg shadow-md card-hover">
+                    <h3 class="text-xl font-bold mb-2">Pekan Karya & Inspirasi</h3>
+                    <p class="text-base mb-3">Pameran tahunan yang menampilkan hasil karya pengguna LRC (multimedia, ilmiah, seni) menciptakan suasana inspiratif dan edukatif.</p>
+                    <ul class="list-disc list-inside text-sm text-gray-400">
+                        <li>Sesi "Bincang Karya" & "Tur Karya"</li>
+                        <li>"Pojok Uji Coba" interaktif</li>
+                        <li>Sesi "Inspirasi Alumni"</li>
+                    </ul>
+                    <button class="mt-4 w-full bg-accent-blue hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md register-training-btn" data-training="Pekan Karya & Inspirasi">Daftar Pelatihan</button>
+                </div>
+
+                <!-- Hari Kenal LRC -->
+                <div class="bg-card-bg p-6 rounded-lg shadow-md card-hover">
+                    <h3 class="text-xl font-bold mb-2">Hari Kenal LRC</h3>
+                    <p class="text-base mb-3">Open house tahunan di mana LRC terbuka untuk masyarakat umum, pelajar, dan mitra. Pengunjung diajak tur fasilitas dan mengikuti mini-workshop.</p>
+                    <ul class="list-disc list-inside text-sm text-gray-400">
+                        <li>"Paspor LRC" dengan souvenir</li>
+                        <li>Sesi "Tanya Jawab" dengan Kepala LRC</li>
+                        <li>Demo layanan digital & "Zona Foto"</li>
+                    </ul>
+                    <button class="mt-4 w-full bg-accent-blue hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md register-training-btn" data-training="Hari Kenal LRC">Daftar Pelatihan</button>
+                </div>
+
+                <!-- Hari Bahasa & Budaya -->
+                <div class="bg-card-bg p-6 rounded-lg shadow-md card-hover">
+                    <h3 class="text-xl font-bold mb-2">Hari Bahasa & Budaya</h3>
+                    <p class="text-base mb-3">Program tematik di mana area LRC diubah menjadi "negara tertentu", komunikasi wajib menggunakan bahasa negara tersebut, didukung pameran budaya dan seni.</p>
+                    <ul class="list-disc list-inside text-sm text-gray-400">
+                        <li>"Paspor Bahasa" & Sesi "Role Play"</li>
+                        <li>Workshop menulis & presentasi bahasa asing</li>
+                        <li>Melibatkan komunitas/mahasiswa asing sebagai fasilitator</li>
+                    </ul>
+                    <button class="mt-4 w-full bg-accent-blue hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md register-training-btn" data-training="Hari Bahasa & Budaya">Daftar Pelatihan</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tentang Kami Section -->
+        <section id="tentang" class="mb-20">
+            <h2 class="text-4xl font-bold text-center mb-12 text-accent-blue">Tentang Kami</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h3 class="text-3xl font-semibold mb-4">Profil Organisasi</h3>
+                    <p class="text-lg leading-relaxed mb-4">
+                        ARAFA Team merupakan sebuah kelompok mahasiswa yang memiliki kepedulian tinggi terhadap peningkatan kualitas pembelajaran di lingkungan universitas. Berangkat dari pengalaman langsung, kami menyadari bahwa Pusat Sumber Belajar (PSB) yang tersedia belum sepenuhnya mengakomodasi lima fungsi utama PSB.
+                    </p>
+                    <p class="text-lg leading-relaxed">
+                        Tim ini secara resmi dibentuk dan diberi nama AL-ARAFA, akronim dari nama para anggotanya: Alif, Rangga, Ali, Fachriza, dan Akmal. Kami berupaya menghadirkan model PSB yang ideal dan adaptif, menjadi pusat inovasi, kolaborasi, dan pengembangan diri bagi seluruh sivitas akademika.
+                    </p>
+                </div>
+                <div class="flex justify-center">
+                    <img src="https://i.imgur.com/hUalWU3.png" alt="Tim AL-ARAFA" class="rounded-lg shadow-xl">
+                </div>
+            </div>
+
+            <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-3xl font-semibold mb-4">Visi Kami</h3>
+                    <p class="text-lg leading-relaxed">
+                        Menciptakan pusat sumber belajar terdepan di lingkungan universitas dalam waktu 5 tahun ke depan, yang secara konsisten mendukung dan meningkatkan budaya belajar mandiri, inovatif, dan kolaboratif di kalangan mahasiswa melalui penyediaan layanan dan fasilitas yang berkualitas dan terintegrasi.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-3xl font-semibold mb-4">Misi Kami</h3>
+                    <ul class="list-disc list-inside text-lg leading-relaxed space-y-2">
+                        <li>Menyediakan akses mudah terhadap berbagai sumber belajar digital dan non-digital yang relevan dengan kebutuhan mahasiswa.</li>
+                        <li>Menyelenggarakan layanan pengembangan sistem instruksional, produksi bahan ajar, layanan media, administrasi, dan pelatihan secara terintegrasi.</li>
+                        <li>Mendorong kolaborasi dan inovasi dalam pembelajaran melalui fasilitas dan program yang terstruktur.</li>
+                        <li>Mendukung pengembangan kompetensi mahasiswa agar mampu menjadi pembelajar mandiri dan adaptif terhadap perubahan zaman.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kontak Section -->
+        <section id="kontak" class="mb-20">
+            <h2 class="text-4xl font-bold text-center mb-12 text-accent-blue">Hubungi Kami</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 bg-card-bg p-8 rounded-lg shadow-md">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">Informasi Kontak</h3>
+                    <p class="text-lg mb-2"><strong class="text-accent-blue">Alamat : </strong> Jl. R.Mangun Muka Raya No.11, RT.11/RW.14, Rawamangun, Kec. Pulo Gadung, Kota Jakarta Timur, Daerah Khusus Ibukota Jakarta 13220</p>
+                    <p class="text-lg mb-2"><strong class="text-accent-blue">Email : </strong> arafaLRC@lrc.co.id</p>
+                    <p class="text-lg mb-2"><strong class="text-accent-blue">Telepon : </strong> (021) 766-5933</p>
+                    <p class="text-lg mb-2"><strong class="text-accent-blue">Jam Operasional : </strong> Senin - Minggu, 08.00 - 22.00 WIB</p>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">Lokasi Kami</h3>
+                    <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-lg">
+                        <!-- Placeholder for Google Maps Embed -->
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.524885060034!2d106.87646360989517!3d-6.1942589937674795!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f4ed14403213%3A0x2412a91a0f6a01c8!2sUniversitas%20Negeri%20Jakarta!5e0!3m2!1sid!2sid!4v1750990380858!5m2!1sid!2sid" width="600" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-blue-900/80 backdrop-blur-sm py-8 text-center text-gray-300">
+        <p>&copy; 2025 Pusat Sumber Belajar AL-ARAFA. Hak Cipta Dilindungi.</p>
+        <p class="text-sm mt-2">Dibuat dengan semangat kolaborasi oleh ARAFA Team.</p>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button" id="closeLoginModal">&times;</span>
+            <h2 class="text-3xl font-bold text-center mb-8 text-accent-blue">Login Anggota</h2>
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label for="username" class="block text-lg font-medium mb-2">Username</label>
+                    <input type="text" id="username" name="username" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 focus:ring-accent-blue focus:border-accent-blue text-white" placeholder="Masukkan username Anda" required>
+                </div>
+                <div>
+                    <label for="password" class="block text-lg font-medium mb-2">Password</label>
+                    <input type="password" id="password" name="password" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 focus:ring-accent-blue focus:border-accent-blue text-white" placeholder="Masukkan password Anda" required>
+                </div>
+                <button type="submit" class="w-full bg-accent-blue hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out">
+                    Masuk
+                </button>
+                <p id="loginMessage" class="text-center text-red-400 mt-4"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Book Borrow Modal -->
+    <div id="borrowBookModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button" id="closeBorrowBookModal">&times;</span>
+            <h2 class="text-3xl font-bold text-center mb-8 text-accent-blue">Form Peminjaman Buku</h2>
+            <form id="borrowBookForm" class="space-y-6">
+                <div>
+                    <label for="borrowerName" class="block text-lg font-medium mb-2">Nama Lengkap</label>
+                    <input type="text" id="borrowerName" name="borrowerName" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 focus:ring-accent-blue focus:border-accent-blue text-white" required>
+                </div>
+                <div>
+                    <label for="borrowerId" class="block text-lg font-medium mb-2">NIM / ID Anggota</label>
+                    <input type="text" id="borrowerId" name="borrowerId" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 focus:ring-accent-blue focus:border-accent-blue text-white" required>
+                </div>
+                <div>
+                    <label for="bookTitle" class="block text-lg font-medium mb-2">Judul Buku</label>
+                    <input type="text" id="bookTitle" name="bookTitle" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 focus:ring-accent-blue focus:border-accent-blue text-white" readonly>
+                </div>
+                <button type="submit" class="w-full bg-accent-blue hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out">
+                    Pinjam Buku
+                </button>
+                <p id="borrowBookMessage" class="text-center text-red-400 mt-4"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Room Booking Modal -->
+    <div id="bookRoomModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button" id="closeBookRoomModal">&times;</span>
+            <h2 class="text-3xl font-bold text-center mb-8 text-accent-blue">Form Peminjaman Ruangan</h2>
+            <form id="bookRoomForm" class="space-y-6">
+                <div>
+                    <label for="roomBorrowerName" class="block text-lg font-medium mb-2">Nama Lengkap</label>
+                    <input type="text" id="roomBorrowerName" name="roomBorrowerName" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 focus:ring-accent-blue focus:border-accent-blue text-white" required>
+                </div>
+                <div>
+                    <label for="roomBorrowerId" class="block text-lg font-medium mb-2">NIM / ID Anggota</label>
+                    <input type="text" id="roomBorrowerId" name="roomBorrowerId" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 focus:ring-accent-blue focus:border-accent-blue text-white" required>
+                </div>
+                <div>
+                    <label for="roomName" class="block text-lg font-medium mb-2">Nama Ruangan</label>
+                    <input type="text" id="roomName" name="roomName" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 focus:ring-accent-blue focus:border-accent-blue text-white" readonly>
+                </div>
+                <div>
+                    <label for="bookingDate" class="block text-lg font-medium mb-2">Tanggal Peminjaman</label>
+                    <input type="date" id="bookingDate" name="bookingDate" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 focus:ring-accent-blue focus:border-accent-blue text-white" required>
+                </div>
+                <div>
+                    <label for="bookingTime" class="block text-lg font-medium mb-2">Waktu Peminjaman</label>
+                    <input type="time" id="bookingTime" name="bookingTime" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 focus:ring-accent-blue focus:border-accent-blue text-white" required>
+                </div>
+                <div>
+                    <label for="bookingPurpose" class="block text-lg font-medium mb-2">Keperluan</label>
+                    <textarea id="bookingPurpose" name="bookingPurpose" rows="3" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 focus:ring-accent-blue focus:border-accent-blue text-white" placeholder="Jelaskan keperluan peminjaman ruangan" required></textarea>
+                </div>
+                <button type="submit" class="w-full bg-accent-blue hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out">
+                    Pesan Ruangan
+                </button>
+                <p id="bookRoomMessage" class="text-center text-red-400 mt-4"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Training Registration Modal -->
+    <div id="registerTrainingModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button" id="closeRegisterTrainingModal">&times;</span>
+            <h2 class="text-3xl font-bold text-center mb-8 text-accent-blue">Form Pendaftaran Pelatihan</h2>
+            <form id="registerTrainingForm" class="space-y-6">
+                <div>
+                    <label for="trainingName" class="block text-lg font-medium mb-2">Nama Lengkap</label>
+                    <input type="text" id="trainingName" name="trainingName" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 focus:ring-accent-blue focus:border-accent-blue text-white" required>
+                </div>
+                <div>
+                    <label for="trainingId" class="block text-lg font-medium mb-2">NIM / ID Anggota</label>
+                    <input type="text" id="trainingId" name="trainingId" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 focus:ring-accent-blue focus:border-accent-blue text-white" required>
+                </div>
+                <div>
+                    <label for="selectedTraining" class="block text-lg font-medium mb-2">Pelatihan yang Dipilih</label>
+                    <input type="text" id="selectedTraining" name="selectedTraining" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 focus:ring-accent-blue focus:border-accent-blue text-white" readonly>
+                </div>
+                <button type="submit" class="w-full bg-accent-blue hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out">
+                    Daftar Sekarang
+                </button>
+                <p id="registerTrainingMessage" class="text-center text-red-400 mt-4"></p>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Login Modal Logic
+        const loginButton = document.getElementById('loginButton');
+        const loginModal = document.getElementById('loginModal');
+        const closeLoginModal = document.getElementById('closeLoginModal');
+        const loginForm = document.getElementById('loginForm');
+        const loginMessage = document.getElementById('loginMessage');
+        // Removed laporanInternalSection as it's no longer in HTML
+
+        const validUsers = {
+            'Fachriza': 'fachriza',
+            'Akmal': 'akmal',
+            'Rangga': 'rangga',
+            'Alif': 'alif',
+            'Ali': 'ali',
+            'Khaerudin': 'khaerudin'
+        };
+
+        loginButton.addEventListener('click', () => {
+            loginModal.classList.remove('hidden');
+        });
+
+        closeLoginModal.addEventListener('click', () => {
+            loginModal.classList.add('hidden');
+            loginMessage.textContent = ''; // Clear message on close
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == loginModal) {
+                loginModal.classList.add('hidden');
+                loginMessage.textContent = ''; // Clear message on close
+            }
+        });
+
+        loginForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (validUsers[username] && validUsers[username] === password.toLowerCase()) {
+                loginMessage.textContent = 'Login Berhasil! Selamat datang.';
+                loginMessage.classList.remove('text-red-400');
+                loginMessage.classList.add('text-green-400');
+                setTimeout(() => {
+                    loginModal.classList.add('hidden');
+                    loginButton.textContent = `Halo, ${username}!`; // Change button text
+                    loginButton.disabled = true; // Disable login button after successful login
+                    loginButton.classList.remove('bg-accent-blue', 'hover:bg-blue-600');
+                    loginButton.classList.add('bg-green-700', 'cursor-default');
+                }, 1500);
+            } else {
+                loginMessage.textContent = 'Username atau password salah.';
+                loginMessage.classList.remove('text-green-400');
+                loginMessage.classList.add('text-red-400');
+            }
+        });
+
+        // Smooth Scrolling for Navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+
+                // Close mobile menu if open
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+
+        // --- Book Borrowing Feature ---
+        const books = [
+            { title: "Pengantar Teknologi Pendidikan", author: "Prof. Dr. Budi Santoso", available: true },
+            { title: "Desain Pembelajaran Interaktif", author: "Dr. Siti Aminah", available: true },
+            { title: "Manajemen Pusat Sumber Belajar", author: "Ir. Joko Susilo", available: false },
+            { title: "Produksi Media Audio Visual", author: "Drs. Rina Wijaya", available: true },
+            { title: "Evaluasi Program Pendidikan", author: "Prof. Dr. Chandra Kirana", available: true },
+            { title: "Kecerdasan Buatan dalam Pendidikan", author: "Dr. Andi Pratama", available: true },
+            { title: "Metodologi Penelitian Pendidikan", author: "Prof. Dr. Dewi Lestari", available: false },
+            { title: "Psikologi Belajar dan Pembelajaran", author: "Dr. Bambang Setiawan", available: true },
+        ];
+
+        const bookListContainer = document.getElementById('book-list');
+        const borrowBookModal = document.getElementById('borrowBookModal');
+        const closeBorrowBookModal = document.getElementById('closeBorrowBookModal');
+        const borrowBookForm = document.getElementById('borrowBookForm');
+        const bookTitleInput = document.getElementById('bookTitle');
+        const borrowBookMessage = document.getElementById('borrowBookMessage');
+
+        function renderBooks() {
+            bookListContainer.innerHTML = '';
+            books.forEach(book => {
+                const card = document.createElement('div');
+                card.className = 'bg-gray-800 p-4 rounded-lg shadow-md card-hover';
+                card.innerHTML = `
+                    <h4 class="text-xl font-bold mb-1 text-accent-blue">${book.title}</h4>
+                    <p class="text-sm text-gray-400 mb-2">Penulis: ${book.author}</p>
+                    <p class="text-base mb-3">Status: <span class="${book.available ? 'text-green-400' : 'text-red-400'}">${book.available ? 'Tersedia' : 'Dipinjam'}</span></p>
+                    <button class="w-full bg-accent-blue hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md ${!book.available ? 'opacity-50 cursor-not-allowed' : ''}" ${!book.available ? 'disabled' : ''} data-book-title="${book.title}">Pinjam</button>
+                `;
+                bookListContainer.appendChild(card);
+            });
+
+            document.querySelectorAll('#book-list button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const title = e.target.dataset.bookTitle;
+                    bookTitleInput.value = title;
+                    borrowBookModal.classList.remove('hidden');
+                });
+            });
+        }
+
+        closeBorrowBookModal.addEventListener('click', () => {
+            borrowBookModal.classList.add('hidden');
+            borrowBookMessage.textContent = '';
+            borrowBookForm.reset();
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == borrowBookModal) {
+                borrowBookModal.classList.add('hidden');
+                borrowBookMessage.textContent = '';
+                borrowBookForm.reset();
+            }
+        });
+
+        borrowBookForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const borrowerName = document.getElementById('borrowerName').value;
+            const borrowerId = document.getElementById('borrowerId').value;
+            const bookTitle = document.getElementById('bookTitle').value;
+
+            if (borrowerName && borrowerId && bookTitle) {
+                borrowBookMessage.textContent = `Permintaan peminjaman buku "${bookTitle}" oleh ${borrowerName} (${borrowerId}) berhasil diajukan. Silakan tunggu konfirmasi dari staf perpustakaan.`;
+                borrowBookMessage.classList.remove('text-red-400');
+                borrowBookMessage.classList.add('text-green-400');
+                borrowBookForm.reset();
+                // Simulate changing book status
+                const bookIndex = books.findIndex(b => b.title === bookTitle);
+                if (bookIndex !== -1) {
+                    books[bookIndex].available = false;
+                    renderBooks(); // Re-render to update status
+                }
+                setTimeout(() => {
+                    borrowBookModal.classList.add('hidden');
+                    borrowBookMessage.textContent = '';
+                }, 3000);
+            } else {
+                borrowBookMessage.textContent = 'Mohon lengkapi semua kolom.';
+                borrowBookMessage.classList.remove('text-green-400');
+                borrowBookMessage.classList.add('text-red-400');
+            }
+        });
+        renderBooks(); // Initial render of books
+
+        // --- Room Booking Feature ---
+        const rooms = [
+            { name: "Ruang Diskusi A", capacity: "5-8 orang", available: true },
+            { name: "Ruang Diskusi B", capacity: "5-8 orang", available: true },
+            { name: "Auditorium Utama", capacity: "200 orang", available: false },
+            { name: "Smart Classroom 1", capacity: "30 orang", available: true },
+            { name: "Studio Produksi Video", capacity: "Tim Produksi", available: true },
+            { name: "Laboratorium Sains", capacity: "20 orang", available: true },
+        ];
+
+        const roomListContainer = document.getElementById('room-list');
+        const bookRoomModal = document.getElementById('bookRoomModal');
+        const closeBookRoomModal = document.getElementById('closeBookRoomModal');
+        const bookRoomForm = document.getElementById('bookRoomForm');
+        const roomNameInput = document.getElementById('roomName');
+        const bookRoomMessage = document.getElementById('bookRoomMessage');
+
+        function renderRooms() {
+            roomListContainer.innerHTML = '';
+            rooms.forEach(room => {
+                const card = document.createElement('div');
+                card.className = 'bg-gray-800 p-4 rounded-lg shadow-md card-hover';
+                card.innerHTML = `
+                    <h4 class="text-xl font-bold mb-1 text-accent-blue">${room.name}</h4>
+                    <p class="text-sm text-gray-400 mb-2">Kapasitas: ${room.capacity}</p>
+                    <p class="text-base mb-3">Status: <span class="${room.available ? 'text-green-400' : 'text-red-400'}">${room.available ? 'Tersedia' : 'Tidak Tersedia'}</span></p>
+                    <button class="w-full bg-accent-blue hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md ${!room.available ? 'opacity-50 cursor-not-allowed' : ''}" ${!room.available ? 'disabled' : ''} data-room-name="${room.name}">Pesan Ruangan</button>
+                `;
+                roomListContainer.appendChild(card);
+            });
+
+            document.querySelectorAll('#room-list button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const name = e.target.dataset.roomName;
+                    roomNameInput.value = name;
+                    bookRoomModal.classList.remove('hidden');
+                });
+            });
+        }
+
+        closeBookRoomModal.addEventListener('click', () => {
+            bookRoomModal.classList.add('hidden');
+            bookRoomMessage.textContent = '';
+            bookRoomForm.reset();
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == bookRoomModal) {
+                bookRoomModal.classList.add('hidden');
+                bookRoomMessage.textContent = '';
+                bookRoomForm.reset();
+            }
+        });
+
+        bookRoomForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const roomBorrowerName = document.getElementById('roomBorrowerName').value;
+            const roomBorrowerId = document.getElementById('roomBorrowerId').value;
+            const roomName = document.getElementById('roomName').value;
+            const bookingDate = document.getElementById('bookingDate').value;
+            const bookingTime = document.getElementById('bookingTime').value;
+            const bookingPurpose = document.getElementById('bookingPurpose').value;
+
+            if (roomBorrowerName && roomBorrowerId && roomName && bookingDate && bookingTime && bookingPurpose) {
+                bookRoomMessage.textContent = `Permintaan peminjaman ruangan "${roomName}" pada ${bookingDate} pukul ${bookingTime} oleh ${roomBorrowerName} (${roomBorrowerId}) berhasil diajukan.`;
+                bookRoomMessage.classList.remove('text-red-400');
+                bookRoomMessage.classList.add('text-green-400');
+                bookRoomForm.reset();
+                // Simulate changing room status (for demo, not persistent)
+                const roomIndex = rooms.findIndex(r => r.name === roomName);
+                if (roomIndex !== -1) {
+                    rooms[roomIndex].available = false; // Mark as unavailable for this demo
+                    renderRooms(); // Re-render to update status
+                }
+                setTimeout(() => {
+                    bookRoomModal.classList.add('hidden');
+                    bookRoomMessage.textContent = '';
+                }, 3000);
+            } else {
+                bookRoomMessage.textContent = 'Mohon lengkapi semua kolom.';
+                bookRoomMessage.classList.remove('text-green-400');
+                bookRoomMessage.classList.add('text-red-400');
+            }
+        });
+        renderRooms(); // Initial render of rooms
+
+        // --- Training Registration Feature ---
+        const registerTrainingModal = document.getElementById('registerTrainingModal');
+        const closeRegisterTrainingModal = document.getElementById('closeRegisterTrainingModal');
+        const registerTrainingForm = document.getElementById('registerTrainingForm');
+        const selectedTrainingInput = document.getElementById('selectedTraining');
+        const registerTrainingMessage = document.getElementById('registerTrainingMessage');
+
+        document.querySelectorAll('.register-training-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const trainingTitle = e.target.dataset.training;
+                selectedTrainingInput.value = trainingTitle;
+                registerTrainingModal.classList.remove('hidden');
+            });
+        });
+
+        closeRegisterTrainingModal.addEventListener('click', () => {
+            registerTrainingModal.classList.add('hidden');
+            registerTrainingMessage.textContent = '';
+            registerTrainingForm.reset();
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == registerTrainingModal) {
+                registerTrainingModal.classList.add('hidden');
+                registerTrainingMessage.textContent = '';
+                registerTrainingForm.reset();
+            }
+        });
+
+        registerTrainingForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const trainingName = document.getElementById('trainingName').value;
+            const trainingId = document.getElementById('trainingId').value;
+            const selectedTraining = document.getElementById('selectedTraining').value;
+
+            if (trainingName && trainingId && selectedTraining) {
+                registerTrainingMessage.textContent = `Pendaftaran pelatihan "${selectedTraining}" atas nama ${trainingName} (${trainingId}) berhasil. Kami akan segera menghubungi Anda.`;
+                registerTrainingMessage.classList.remove('text-red-400');
+                registerTrainingMessage.classList.add('text-green-400');
+                registerTrainingForm.reset();
+                setTimeout(() => {
+                    registerTrainingModal.classList.add('hidden');
+                    registerTrainingMessage.textContent = '';
+                }, 3000);
+            } else {
+                registerTrainingMessage.textContent = 'Mohon lengkapi semua kolom.';
+                registerTrainingMessage.classList.remove('text-green-400');
+                registerTrainingMessage.classList.add('text-red-400');
+            }
+        });
+    </script>
+</body>
+</html>
